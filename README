@@ -1,0 +1,14 @@
+dbooks.erl - Version 1.0
+-----------------------------------------------------
+quinney library duplicate books db search
+
+a yaws apmod for:
+
+add (not implemented yet)
+edit (not implemented yet)
+delete (not implemented yet)
+search
+
+of the duplicate books data
+
+for more information, see the source file
