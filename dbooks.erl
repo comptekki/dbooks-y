@@ -263,9 +263,10 @@ js4(ServerPath) ->
 					$(document).ready(
 						function() {
 							$('#single_input_dbooks').keyup(function(event) {
-// ignore windows list 0, return 13, shift 16,  ctr 17, alt 18, windows flag 91
+// ignore windows menu key 0, return 13, shift 16,  ctr 17, alt 18,
+// windows flag 91 on chrome 224 on mozilla 
 // js 'in' operator requires key:value pair so all keys just have value 0
-								if (!(event.keyCode in {0:0,13:0,16:0,17:0,18:0,91:0})) {
+								if (!(event.keyCode in {0:0,13:0,16:0,17:0,18:0,91:0,224:0})) {
 								   ajfun1();
 								} // if
 						});
