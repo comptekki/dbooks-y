@@ -312,7 +312,8 @@ table2(Cbox, RowsPerPage, ServerPath, Ls, S, Result, Res2) ->
 				  {tr, [],
 				   [{td, [],
 					  [
-"<select id='range_input_view_s'>
+"
+<select id='range_input_view_s'>
 <option value='10'>10</option>
 <option value='20'>20</option>
 <option value='30'>30</option>
@@ -324,8 +325,7 @@ table2(Cbox, RowsPerPage, ServerPath, Ls, S, Result, Res2) ->
 <option value='90'>90</option>
 <option value='100'>100</option>
 </select>
-"
-					   ,
+",
 					{input, [{id,"range_input_view"},{type,"range"}, {name, "range_input_view"}, {min,"10"}, {max,"100"}, {value,RowsPerPage}, {step,"5"}]}]
 					},
 					{td, [{class,"rows"}],
@@ -377,8 +377,8 @@ $(document).ready(function() {
 				  }
 		    });
 	    })
-	});"
-				},
+	});
+"},
 				{table, [],
 				 {tr, [],
 				  {td, [],
