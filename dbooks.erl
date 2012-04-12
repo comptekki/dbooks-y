@@ -33,7 +33,8 @@
 
 -define(MAX_LEN, 30).
 
-%%% @private
+%
+
 out(A) ->
 	ServerPath=string:strip(A#arg.server_path, both, $/),
 	{Client_IP,_Port}=A#arg.client_ip_port,
@@ -65,7 +66,8 @@ out(A) ->
 			end
 	end.
 
-%%% Get the fields to be part of the select
+% Get the fields to be part of the select
+
 select_fields([{"tablename",_}|T]) -> select_fields(T);
 select_fields([{_,undefined}|T])   -> select_fields(T);
 select_fields([H|T]) ->
@@ -74,6 +76,7 @@ select_fields([H|T]) ->
 	[H2|select_fields(T)];
 select_fields([])                  -> [].
 
+%
 
 select_pattern(Name) ->
 	S="select * from " ++ Name ++ " order by title",
@@ -95,9 +98,14 @@ select_pattern(Name, Ls, S) ->
 	io:format("~n~s",[S3]),
 	S3.
 
+
+%
+
 fieldq(Op, Field, Value) ->
 	Sval = sanitize(Value),
 	fdq(Sval, Field, Op) ++ "%'".
+
+%
 
 fdq("---" ++ Rest, Field, Op) ->
 	Op ++ Field ++ "::text ~~* '%-"++Rest;	
@@ -106,11 +114,14 @@ fdq("-" ++ Rest, Field, _) ->
 fdq(Text, Field, Op) ->
 	Op ++ Field ++ "::text ~~* '%" ++ Text.	
 
+%
+
 sandor(" and " ++ Rest) ->
-	Rest;
-	
+	Rest;	
 sandor(" or " ++ Rest) ->
 	Rest.
+
+%
 	
 sanitize(S) ->
 	S2=re:replace(S,"'","''",[{return,list}, global]),
@@ -145,6 +156,8 @@ return_top_page(ServerPath, Hdr) ->
 			  ]}
 	end.
 
+%
+
 rttp_main(ServerPath, Hdr) ->
 	
 	 [
@@ -158,6 +171,8 @@ rttp_main(ServerPath, Hdr) ->
 	  
 	  {body, [],mk_table_tab(10,0, ServerPath, Hdr)}
 	  ].
+
+%
 
 rttp_css() ->
 	[
@@ -182,6 +197,8 @@ rttp_css() ->
                     ]}
 	 ].
 
+%
+
 setfields() ->
 	"' + '&rpp=' + $('#range_input').val() + "++ " '&offset=' + $('#offset').val() + " ++
     map(
@@ -189,6 +206,8 @@ setfields() ->
     		" '&"++a2l(Col)++"=' + encodeURIComponent($('#"++a2l(Col)++"').val()) + ($('#cbox_"++a2l(Col)++"').attr('checked')?'&cbox_"++a2l(Col)++"='+ $('#cbox_"++a2l(Col)++"').val():'') + "
     	end,
     	get_columns()) ++ "''".
+
+%
 
 setfields_single() ->
 	"' + '&rpp=' + $('#range_input').val() + '&offset=' + $('#offset').val() + " ++
@@ -200,6 +219,8 @@ setfields_single() ->
     " '&notes=' + encodeURIComponent($('#single_input_dbooks').val())  + " ++ 
     " '&valuation=' + encodeURIComponent($('#single_input_dbooks').val())  + " ++ 
     "'&purchase_price=' + encodeURIComponent($('#single_input_dbooks').val())".
+
+%
 
 js3a(ServerPath) ->
 		{script,
@@ -222,6 +243,8 @@ js3a(ServerPath) ->
 					"
 		}.
 
+%
+
 js3b() ->
 	{script,
 	 [{type, "text/javascript"}],
@@ -241,6 +264,8 @@ js3b() ->
 	   get_columns()
 	  )
 	}.
+
+%
 		
 js4(ServerPath) ->
 		{script,
@@ -274,7 +299,8 @@ js4(ServerPath) ->
 					"
 		}.
 		
-%%% Build the result page.
+% Build the result page.
+
 table(Cbox, Sp, SpOffset, RowsPerPage, ServerPath, Ls, S) ->
 	case do_query(SpOffset) of
 		{_, error} ->
@@ -287,6 +313,7 @@ table(Cbox, Sp, SpOffset, RowsPerPage, ServerPath, Ls, S) ->
 					table2(Cbox, RowsPerPage, ServerPath, Ls, S, Result, Res2)
 			end
 	end.
+%
 
 table2(Cbox, RowsPerPage, ServerPath, Ls, S, Result, Res2) ->
 	Count=length(Res2),
@@ -457,14 +484,16 @@ build_nav(Start, End, RowsPerPage, ServerPath, S) ->
 		"}], [io_lib:format("~p",[Start])]}}
 	end.
 	
-%%% Create a pattern denoting which fields to show in the result.
+% Create a pattern denoting which fields to show in the result.
+
 view_pattern(Cs, L) -> view_pattern(Cs, L, 1).
 
 view_pattern([Cbox|Cs], [Cbox|T], N) -> [N | view_pattern(Cs, T, N+1)];
 view_pattern(Cs, [_|T], N)           -> view_pattern(Cs, T, N+1);
 view_pattern([], [], _)              -> [].
 
-	
+%	
+
 do_query(Sp) ->	
 	case pgsql:connect(?HOST, ?USERNAME, ?PASSWORD, [{database, ?DB}]) of
 		{error,_} ->
@@ -479,8 +508,7 @@ do_query(Sp) ->
 			end
 	end.
 
-%%% Create a table of: Table | Table-attribute-1 | ... | Table-attribute-N
-%%% where each table is a Form
+%
 
 mk_table_tab(RowsPerPage, Offset, ServerPath, Hdr) ->
     [
@@ -538,7 +566,8 @@ mk_table_tab(RowsPerPage, Offset, ServerPath, Hdr) ->
      {'div', [{id, "data"}]}
     ].
 
-%%% create each table cell; consisting of the attribute name and an input field.
+% create each table cell; consisting of the attribute name and an input field.
+
 mk_input_fields() ->
     As = get_columns(),
     Max = 8,
@@ -552,6 +581,7 @@ mk_input_fields() ->
                   {input, [{id, A}, {type, "text"}, {name, A}, {maxlength, 30}]}]}
         end, As ++ lists:duplicate(Max-length(As), 0)).
 
+%
 
 extract_cbox(L) ->
     extract_cbox(L, [], []).
@@ -573,6 +603,7 @@ extract_s([], Cs, Rs) ->
     {reverse(Cs), reverse(Rs)}.
     
 %
+
 extract_rpp(L) ->
     extract_rpp(L, [], []).
 
@@ -584,6 +615,7 @@ extract_rpp([], Cs, Rs) ->
     {reverse(Cs), reverse(Rs)}.
 
 %
+
 extract_offset(L) ->
     extract_offset(L, [], []).
 
@@ -594,7 +626,8 @@ extract_offset([H|T], Cs, Rs) ->
 extract_offset([], Cs, Rs) ->
     {reverse(Cs), reverse(Rs)}.
     
-%%% Build the result table.
+% Build the result table.
+
 mk_tab(Vp, Headers, Rows, Ls) ->
 	Hdrs=[{th, [{style, "width:175px; text-align:right; vertical-align:top;"}], title(a2l(X))} || X <- vp(Vp,Headers)],
     [{'div', [],
