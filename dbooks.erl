@@ -263,7 +263,9 @@ js4(ServerPath) ->
 					$(document).ready(
 						function() {
 							$('#single_input_dbooks').keyup(function(event) {
-								if (event.keyCode != 16) {  // ignore shift key -  && event.keyCode !=13
+// ignore windows list 0, return 13, shift 16,  ctr 17, alt 18, windows flag 91
+// js 'in' operator requires key:value pair so all keys just have value 0
+								if (!(event.keyCode in {0:0,13:0,16:0,17:0,18:0,91:0})) {
 								   ajfun1();
 								} // if
 						});
@@ -329,7 +331,7 @@ table2(Cbox, RowsPerPage, ServerPath, Ls, S, Result, Res2) ->
 					 {span, [],
 					  ["Show ",
 					   {span, [{id,"range_val"}], "10"},
-					   " items per pages"
+					   " items per page"
 					  ]
 					 }
 					}
